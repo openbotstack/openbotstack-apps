@@ -1,19 +1,18 @@
 # openbotstack-apps
 
-Application Plane for OpenBotStack — domain skills, tools, workflows, and example applications.
+Application Plane for OpenBotStack — domain skills, workflows, and example applications.
 
 ## Architecture
 
 ```
-apps/           Example applications (demo CLI)
-skills/         Domain skill definitions (nursing)
-tools/          External system connectors (EHR, analytics)
-workflows/      Multi-step workflow definitions
+apps/
+  hospital-demo/     Hospital ICU/CCU demo (MCP servers + manifest skills + workflows)
+  healthcare/        Healthcare-specific adapters (FHIR audit mapper)
 ```
 
 ## Dependencies
 
-- `openbotstack-core` — control plane types (Skill interface, JSONSchema, ExecutionPlan)
+- `openbotstack-core` — control plane types (Skill interface, JSONSchema, ExecutionPlan, AuditEventMapper)
 
 Uses a local `replace` directive for development:
 
@@ -27,44 +26,28 @@ replace github.com/openbotstack/openbotstack-core => ../openbotstack-core
 # Run tests
 make test
 
-# Run demo
-make demo
-
 # Lint
 make lint
 ```
 
-## Layers
+## Application: Hospital Demo
 
-### Tools
+A complete hospital ICU/CCU demonstration featuring:
 
-Low-level connectors to external systems. Currently provides mock implementations.
+- **3 MCP servers** (HIS, LIS, Vitals) — mock external systems via stdio JSON-RPC
+- **5 manifest-based skills** — declarative SKILL.md + manifest.yaml
+- **3 workflows** — ICU round, abnormal lab investigation, admission summary
+- **E2E tests** — full integration test suite
 
-| Tool | Package | Description |
-|------|---------|-------------|
-| `ehr.query_patient` | `tools/ehr` | Query patient demographics |
-| `ehr.query_vitals` | `tools/ehr` | Query vital signs |
-| `ehr.query_labs` | `tools/ehr` | Query lab results |
-| `analytics.risk_score` | `tools/analytics` | Deterministic clinical risk score |
+See [apps/hospital-demo/README.md](apps/hospital-demo/README.md) for details.
 
-### Skills
+## Application: Healthcare Adapters
 
-Domain-specific capabilities implementing `registry/skills.Skill`.
+Industry-specific audit event mappers implementing `audit.AuditEventMapper`:
 
-| Skill | Package | Description |
-|-------|---------|-------------|
-| `nursing/query_patients` | `skills/nursing` | List patients by unit |
-| `nursing/summarize_status` | `skills/nursing` | Clinical status summary |
-| `nursing/generate_sbar` | `skills/nursing` | SBAR handover generation |
+- **FHIR AuditEvent mapper** — converts audit envelopes to HL7 FHIR R4 AuditEvent resources
 
-### Workflows
-
-Multi-step compositions that produce `ExecutionPlan` instances.
-
-| Workflow | Description |
-|----------|-------------|
-| `shift_handover` | Full nursing shift handover report |
-| `patient_summary` | Single patient clinical summary |
+See [apps/healthcare/audit/](apps/healthcare/audit/) for details.
 
 ## Contract
 

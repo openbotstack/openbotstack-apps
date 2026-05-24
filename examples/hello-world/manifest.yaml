@@ -1,0 +1,25 @@
+version: 1.0.0
+execution:
+  mode: wasm
+input_schema:
+  type: object
+  properties:
+    message:
+      type: string
+      description: Message to process
+output_schema:
+  type: object
+  properties:
+    message:
+      type: string
+    data:
+      type: object
+      additionalProperties:
+        type: string
+    error:
+      type: string
+permissions: []
+timeout: 10s
+resources:
+  max_memory_mb: 64
+  max_cpu_ms: 10000

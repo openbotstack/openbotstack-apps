@@ -1,0 +1,23 @@
+id: medical.sbar-handover
+name: SBAR Handover
+description: Generates a structured SBAR shift handover document. Requires MCP tool calls to gather patient data before invoking this skill.
+execution:
+  mode: declarative
+input_schema:
+  type: object
+  properties:
+    patient_data:
+      type: string
+      description: "JSON data from get_patient_demographics or get_current_status MCP tool"
+    events:
+      type: string
+      description: "JSON data from get_recent_events MCP tool"
+    vitals:
+      type: string
+      description: "JSON data from get_vitals MCP tool"
+  required:
+  - patient_data
+timeout: 90s
+required_permissions:
+  - mcp:vitals
+  - mcp:events

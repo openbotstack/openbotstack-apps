@@ -1,0 +1,3 @@
+module fake-lis
+
+go 1.26.1

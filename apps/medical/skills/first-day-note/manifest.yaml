@@ -1,0 +1,24 @@
+id: medical.first-day-note
+name: First Day Note
+description: Generates a structured first-day clinical note by aggregating patient demographics, diagnoses, lab results, and vitals from external systems
+execution:
+  mode: declarative
+input_schema:
+  type: object
+  properties:
+    patient_id:
+      type: string
+      description: "Patient identifier in the external system (e.g., P001)"
+  required:
+  - patient_id
+output_schema:
+  type: object
+  properties:
+    note:
+      type: string
+      description: "Structured first-day clinical note"
+timeout: 90s
+required_permissions:
+  - mcp:his
+  - mcp:lis
+  - mcp:vitals

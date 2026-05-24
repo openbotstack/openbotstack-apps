@@ -9,11 +9,11 @@ All instructions in this file are authoritative for this repository.
 This repository implements the APPLICATION PLANE of OpenBotStack.
 
 ## IT MAY CONTAIN:
-- Domain-specific skills (nursing, clinical, operations)
-- Tool adapters (EHR, analytics, database wrappers)
-- Workflows (compositions of skills and tools)
-- Example applications and CLI demos
-- Stub data for development and testing
+- Domain-specific manifest-based skills (SKILL.md + manifest.yaml)
+- MCP server implementations for external system integration
+- Workflow definitions composing skills into execution plans
+- Industry-specific audit event mappers (implementing core AuditEventMapper)
+- Example applications with E2E test suites
 
 ## IT MUST NOT:
 - Define assistant identity or persona
@@ -25,10 +25,11 @@ This repository implements the APPLICATION PLANE of OpenBotStack.
 - Contain control-plane or runtime logic
 
 ## DESIGN RULES:
-- Skills implement the `registry/skills.Skill` interface from openbotstack-core
-- Tools are self-contained, stateless adapters
+- Skills use manifest-based definitions (manifest.yaml + SKILL.md), loaded by runtime
+- MCP servers implement the MCP protocol for external system integration
 - Workflows build `execution.ExecutionPlan` from openbotstack-core
+- Audit mappers implement `audit.AuditEventMapper` from openbotstack-core
 - All domain logic is deterministic and testable
 - No direct LLM provider calls; use core model abstractions
 
-> This repo MUST NOT contain any executable entrypoint beyond example demos.
+> This repo MUST NOT contain any executable entrypoint beyond example MCP servers.
