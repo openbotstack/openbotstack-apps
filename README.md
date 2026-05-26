@@ -6,8 +6,10 @@ Application Plane for OpenBotStack — domain skills, workflows, and example app
 
 ```
 apps/
-  hospital-demo/     Hospital ICU/CCU demo (MCP servers + manifest skills + workflows)
+  medical/           Medical scenario validation (MCP servers + manifest skills + workflows)
   healthcare/        Healthcare-specific adapters (FHIR audit mapper)
+examples/
+  hello-world/       Minimal Wasm skill example
 ```
 
 ## Dependencies
@@ -30,16 +32,11 @@ make test
 make lint
 ```
 
-## Application: Hospital Demo
+## Application: Medical Scenario
 
-A complete hospital ICU/CCU demonstration featuring:
+A medical scenario validation demo featuring MCP servers, manifest skills, and workflows.
 
-- **3 MCP servers** (HIS, LIS, Vitals) — mock external systems via stdio JSON-RPC
-- **5 manifest-based skills** — declarative SKILL.md + manifest.yaml
-- **3 workflows** — ICU round, abnormal lab investigation, admission summary
-- **E2E tests** — full integration test suite
-
-See [apps/hospital-demo/README.md](apps/hospital-demo/README.md) for details.
+See [apps/medical/](apps/medical/) for details.
 
 ## Application: Healthcare Adapters
 
@@ -48,6 +45,12 @@ Industry-specific audit event mappers implementing `audit.AuditEventMapper`:
 - **FHIR AuditEvent mapper** — converts audit envelopes to HL7 FHIR R4 AuditEvent resources
 
 See [apps/healthcare/audit/](apps/healthcare/audit/) for details.
+
+## Example: Hello World
+
+A minimal Wasm skill compiled with `GOOS=wasip1 GOARCH=wasm`.
+
+See [examples/hello-world/](examples/hello-world/) for details.
 
 ## Contract
 
