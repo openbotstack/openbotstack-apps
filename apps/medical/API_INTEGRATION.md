@@ -90,8 +90,6 @@ plan → skill selection → MCP tool calls → output.
 Full streaming flow for a clinical query using MCP tools + SBAR handover skill:
 
 ```
-:ok
-
 event: progress
 data: {"type":"analyzing","content":"Analyzing request..."}
 
@@ -100,12 +98,6 @@ data: {"type":"loading_context","content":"Loading context..."}
 
 event: progress
 data: {"type":"planning","content":""}
-
-event: progress
-data: {"type":"planning_generating","content":""}
-
-event: progress
-data: {"type":"planning_complete","content":""}
 
 event: progress
 data: {"type":"step_start","content":"mcp.his.get_patient_demographics"}
@@ -126,19 +118,19 @@ event: progress
 data: {"type":"step_complete","content":"mcp.events.get_recent_events"}
 
 event: progress
-data: {"type":"step_start","content":"sbar-handover"}
+data: {"type":"step_start","content":"medical.sbar-handover"}
 
 event: progress
 data: {"type":"token","content":"### SBAR SHIFT HANDOVER\n\n**Patient**: Chen Mei (P004), ICU-04\n..."}
 
 event: progress
-data: {"type":"step_complete","content":"sbar-handover"}
+data: {"type":"step_complete","content":"medical.sbar-handover"}
 
 event: session
 data: {"session_id":"519a4850-71e6-4243-9c6b-2f788fa6d6de"}
 
 event: done
-data: {"execution_id":"df46c06f-db15-4ac2-a942-3b34b278ea1c","skill_used":"mcp.his.get_patient_demographics, mcp.vitals.get_vitals, mcp.events.get_recent_events, sbar-handover"}
+data: {"execution_id":"df46c06f-db15-4ac2-a942-3b34b278ea1c"}
 ```
 
 ## MCP Tool Requirements

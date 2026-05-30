@@ -105,7 +105,7 @@ curl http://localhost:8080/v1/admin/capabilities
 
 ## Demo Client
 
-A single-file HTML developer tool that demonstrates external system integration.
+A single-file HTML developer tool that demonstrates user-facing API integration for business developers.
 
 ```bash
 # Open in browser
@@ -114,14 +114,21 @@ open demo-client/index.html
 python3 -m http.server 3000 --directory demo-client
 ```
 
+### Tabs
+
+| Tab | APIs Demonstrated | Description |
+|-----|-------------------|-------------|
+| **Chat** | `POST /v1/chat/stream`, `GET /v1/execution/{id}/reasoning` | SSE streaming chat with real-time step progress, reasoning trace, metadata panel |
+| **Sessions** | `GET /v1/sessions`, `GET /v1/sessions/{id}/history`, `DELETE /v1/sessions/{id}` | Session listing, conversation history viewer, session deletion |
+| **Executions** | `GET /v1/executions`, `GET /v1/execution/{id}/reasoning` | Execution list with status/duration, clickable reasoning trace viewer |
+| **Capabilities** | `GET /v1/skills` | Registered skills with input schemas, plus builtin tools reference |
+
 ### Features
 
-- Streaming chat via `POST /v1/chat/stream` (SSE)
-- Execution ID capture from stream events
-- Reasoning trace retrieval via `GET /v1/execution/{id}/reasoning`
-- Visualization: plan steps, skill calls, MCP tool calls, input/output, errors
-- Metadata panel: execution ID, duration, step count, stop reason
-- Quick actions for common medical queries
+- Streaming chat with live step progress visualization (plan → tool calls → observations)
+- Medical data renderers: demographics, lab results (with abnormal/critical flags), vital signs, clinical events, status summaries
+- Quick actions for common medical queries (first-day note, SBAR handover, summarize, classify)
+- No hardcoded credentials — developer configures API URL and optional API key
 
 ## Test Patients
 
