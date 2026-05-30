@@ -230,8 +230,8 @@ main{flex:1;display:flex;overflow:hidden}
         <div class="data-section" id="skillsList"><div class="empty-state">Loading...</div></div>
       </div>
       <div class="panel panel-right">
-        <div class="panel-header">Builtin Tools <span class="badge" id="toolsCount">-</span></div>
-        <div class="data-section" id="toolsList"><div class="empty-state">Loading...</div></div>
+        <div class="panel-header">Skill Detail</div>
+        <div class="data-section" id="skillDetail"><div class="empty-state">Click a skill to view its input/output schema.</div></div>
       </div>
     </div>
   </div>
@@ -560,32 +560,30 @@ function viewTrace(eid) {
 // TAB: Capabilities
 // ====================================================================
 
-var builtinTools = [
-  { id: 'builtin.now', desc: 'UTC timestamp', perms: '—' },
-  { id: 'builtin.uuid_generate', desc: 'UUID v4', perms: '—' },
-  { id: 'builtin.json_parse', desc: 'Parse raw text → structured JSON', perms: '—' },
-  { id: 'builtin.json_query', desc: 'Dot-notation JSON path query', perms: '—' },
-  { id: 'builtin.read_file', desc: 'Read file from allowed dirs', perms: 'file.read' },
-  { id: 'builtin.write_file', desc: 'Write file to allowed dirs', perms: 'file.write' },
-  { id: 'builtin.web_fetch', desc: 'HTTP fetch (SSRF-protected)', perms: 'http.fetch' },
-];
-
 function loadCapabilities() {
-  // Skills
+  // Skills from GET /v1/skills
   fetch(apiBase() + '/v1/skills', { headers: headers() }).then(function(r) { return r.json(); }).then(function(data) {
     loadSkillNames();
     $('skillsCount').textContent = Array.isArray(data) ? data.length : 0;
-    if (!Array.isArray(data)||!data.length) { $('skillsList').innerHTML = '<div class="empty-state">No skills registered.</div>'; return; }
+    if (!Array.isArray(data)||!data.length) { $('skillsList').innerHTML = '<div class="empty-state">No skills registered.<br/>Ensure the server is running and skills are loaded.</div>'; return; }
     var h = '<table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Input Schema</th><th>Version</th><th>Status</th></tr></thead><tbody>';
-    data.forEach(function(s) {
-      h += '<tr><td>'+escHtml(s.id)+'</td><td>'+escHtml(s.name)+'</td><td>'+(s.type||'')+'</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px">'+escHtml(JSON.stringify(s.input_schema||{}).substring(0,100))+'</td><td>'+(s.version||'')+'</td><td style="color:'+(s.enabled?'var(--success)':'var(--error)')+'">'+(s.enabled?'Enabled':'Disabled')+'</td></tr>';
+    window._skillsData = data;
+    data.forEach(function(s, i) {
+      h += '<tr style="cursor:pointer" onclick="showSkillDetail('+i+')"><td>'+escHtml(s.id)+'</td><td>'+escHtml(s.name)+'</td><td>'+(s.type||'')+'</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px">'+escHtml(JSON.stringify(s.input_schema||{}).substring(0,100))+'</td><td>'+(s.version||'')+'</td><td style="color:'+(s.enabled?'var(--success)':'var(--error)')+'">'+(s.enabled?'Enabled':'Disabled')+'</td></tr>';
     });
     $('skillsList').innerHTML = h+'</tbody></table>';
-  }).catch(function(e) { $('skillsList').innerHTML = '<div class="empty-state">Error: '+escHtml(e.message)+'</div>'; });
-  // Builtin tools
-  $('toolsCount').textContent = builtinTools.length;
-  $('toolsList').innerHTML = '<table class="data-table"><thead><tr><th>Tool</th><th>Description</th><th>Permissions</th></tr></thead><tbody>' +
-    builtinTools.map(function(t) { return '<tr><td style="font-family:var(--font-mono)">'+t.id+'</td><td>'+t.desc+'</td><td>'+t.perms+'</td></tr>'; }).join('') + '</tbody></table>';
+  }).catch(function(e) { $('skillsList').innerHTML = '<div class="empty-state">Server not reachable.<br/>Start OpenBotStack and point API URL to it.</div>'; });
+}
+
+function showSkillDetail(i) {
+  var s = window._skillsData && window._skillsData[i];
+  if (!s) return;
+  var h = '<h3 style="font-size:13px;color:var(--accent);margin-bottom:12px">'+escHtml(s.name)+' ('+escHtml(s.id)+')</h3>';
+  h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:12px">'+escHtml(s.description||'')+'</div>';
+  h += '<h4 style="font-size:12px;color:var(--text);margin-bottom:6px">Type</h4><div style="font-size:11px;margin-bottom:12px">'+(s.type||'')+' | v'+(s.version||'')+'</div>';
+  h += '<h4 style="font-size:12px;color:var(--text);margin-bottom:6px">Input Schema</h4><pre class="json-raw" style="max-height:200px">'+escHtml(JSON.stringify(s.input_schema||{},null,2))+'</pre>';
+  h += '<h4 style="font-size:12px;color:var(--text);margin-bottom:6px;margin-top:12px">Output Schema</h4><pre class="json-raw" style="max-height:200px">'+escHtml(JSON.stringify(s.output_schema||{},null,2))+'</pre>';
+  $('skillDetail').innerHTML = h;
 }
 
 })();
