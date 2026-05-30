@@ -86,5 +86,5 @@ func run(inputData []byte) []byte {
 
 func main() {
 	input, _ := io.ReadAll(os.Stdin)
-	os.Stdout.Write(run(input))
+	_, _ = os.Stdout.Write(run(input))
 }
